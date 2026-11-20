@@ -1,30 +1,72 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Pruebas unitarias de los modelos: verifican que el JSON de la API
+// se convierta bien en objetos Dart, sin necesidad de internet.
+// Se ejecutan con:  flutter test
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart';
 
-import 'package:oye_flutter/main.dart';
+import 'package:oye_flutter/models/gasto.dart';
+import 'package:oye_flutter/models/login_response.dart';
+import 'package:oye_flutter/models/reporte_gastos.dart';
+import 'package:oye_flutter/models/usuario.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Usuario: lee el JSON de la API y reconoce al admin', () {
+    final usuario = Usuario.fromJson({
+      'id': 'a1',
+      'username': 'admin',
+      'name': 'Administrador',
+      'email': 'admin@oye.com',
+      'role': 'ADMIN',
+      'status': 'ACTIVE',
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(usuario.name, 'Administrador');
+    expect(usuario.esAdmin, isTrue);
+    expect(Usuario.fromJson(usuario.toJson()).email, 'admin@oye.com');
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('Gasto: convierte los valores numéricos a double', () {
+    final gasto = Gasto.fromJson({
+      'id': 'g1',
+      'fecha': '2026-11-20',
+      'valorTotalSinIva': 10000,
+      'ivaTotal': 1900.0,
+      'valorTotalConIva': '11900',
+      'lugar': 'Cartagena',
+      'descripcion': 'Almuerzo',
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(gasto.valorTotalSinIva, 10000.0);
+    expect(gasto.ivaTotal, 1900.0);
+    expect(gasto.valorTotalConIva, 11900.0);
+    expect(gasto.nombreUsuario, '');
+  });
+
+  test('LoginResponse: trae el token y el usuario', () {
+    final login = LoginResponse.fromJson({
+      'accessToken': 'abc.def.ghi',
+      'tokenType': 'Bearer',
+      'expiresIn': 3600,
+      'user': {'id': 'u1', 'name': 'Gary', 'role': 'MEMBER'},
+    });
+
+    expect(login.accessToken, 'abc.def.ghi');
+    expect(login.user.esAdmin, isFalse);
+  });
+
+  test('ReporteGastos: lee la lista y los totales', () {
+    final reporte = ReporteGastos.fromJson({
+      'cantidad': 1,
+      'totalSinIva': 10000,
+      'totalIva': 1900,
+      'totalConIva': 11900,
+      'gastos': [
+        {'id': 'g1', 'fecha': '2026-11-20', 'valorTotalSinIva': 10000},
+      ],
+    });
+
+    expect(reporte.cantidad, 1);
+    expect(reporte.gastos.first.id, 'g1');
+    expect(reporte.totalConIva, 11900.0);
   });
 }
