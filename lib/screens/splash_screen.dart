@@ -6,12 +6,12 @@ import '../services/auth_service.dart';
 import '../services/session_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import '../utils/navegacion.dart';
 import '../widgets/swoosh.dart';
-import 'pantalla_provisional.dart';
 
 /// Primera pantalla (equivale a SplashActivity del Corte 3 y Screen1 de Kodular).
-/// Mientras se ve el logo, despierta Render.
-/// Si hay una sesión guardada, la verifica con /api/users/me.
+/// Mientras se ve el logo, despierta Render y luego va al login.
+/// Si hay una sesión guardada, la verifica con /api/users/me y salta directo al menú.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -34,25 +34,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _arrancar() async {
     final reloj = Stopwatch()..start();
-    String estado;
+    var sesionValida = false;
 
     if (await _sesion.haySesion()) {
       try {
         final usuario = await _auth.miPerfil();
         await _sesion.actualizarUsuario(usuario);
-        estado = 'Sesión válida de ${usuario.name}. Aquí irá el menú (Fase 2).';
+        sesionValida = true;
       } on ApiException {
         // Token vencido o sin conexión: se vuelve a iniciar sesión.
         await _sesion.cerrarSesion();
-        estado = 'La sesión guardada ya no es válida. Aquí irá el login (Fase 2).';
       }
     } else {
       try {
         await _auth.despertar();
-        estado = 'Servidor despierto: respondió en ${_segundos(reloj)} s.';
-      } on ApiException catch (e) {
-        // Aunque falle, se sigue; en el login se verá el error si no hay internet.
-        estado = 'No se pudo despertar el servidor: ${e.mensaje}';
+      } on ApiException {
+        // Aunque falle, se sigue al login; allí se verá el error si no hay internet.
       }
     }
 
@@ -60,12 +57,12 @@ class _SplashScreenState extends State<SplashScreen> {
     if (falta > Duration.zero) await Future<void>.delayed(falta);
 
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => PantallaProvisional(estado: estado)),
-    );
+    if (sesionValida) {
+      Navegacion.irAlMenu(context);
+    } else {
+      Navegacion.irAlLogin(context);
+    }
   }
-
-  String _segundos(Stopwatch reloj) => (reloj.elapsedMilliseconds / 1000).toStringAsFixed(1);
 
   @override
   Widget build(BuildContext context) {
