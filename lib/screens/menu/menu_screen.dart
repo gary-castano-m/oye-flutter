@@ -8,6 +8,8 @@ import '../../theme/app_theme.dart';
 import '../../utils/etiquetas.dart';
 import '../../utils/navegacion.dart';
 import '../../widgets/encabezado_marca.dart';
+import '../gastos/gasto_form_screen.dart';
+import '../gastos/gastos_lista_screen.dart';
 
 /// Menú principal (equivale a MenuActivity del Corte 3; une Screen4 y Screen5 de Kodular):
 /// todos ven la sección de gastos y solo el ADMIN ve la sección de administración.
@@ -38,6 +40,13 @@ class _MenuScreenState extends State<MenuScreen> {
       return;
     }
     setState(() => _usuario = usuario);
+  }
+
+  /// Abre otra pantalla y, al volver, refresca el saludo
+  /// (por ejemplo, después de editar el nombre en Mi perfil).
+  Future<void> _abrir(Widget pantalla) async {
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => pantalla));
+    await _cargarUsuario();
   }
 
   /// Aviso temporal para las opciones que se construyen en las fases siguientes.
@@ -112,12 +121,12 @@ class _MenuScreenState extends State<MenuScreen> {
                           _BotonMenu(
                             texto: 'Registrar gasto',
                             icono: Icons.add_circle_outline,
-                            alTocar: () => _proximamente('Registrar gasto', 3),
+                            alTocar: () => _abrir(const GastoFormScreen()),
                           ),
                           _BotonMenu(
                             texto: 'Mis gastos',
                             icono: Icons.receipt_long,
-                            alTocar: () => _proximamente('Mis gastos', 3),
+                            alTocar: () => _abrir(const GastosListaScreen()),
                           ),
                           _BotonMenu(
                             texto: 'Reportes de gastos',
