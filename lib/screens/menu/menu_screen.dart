@@ -10,6 +10,8 @@ import '../../utils/navegacion.dart';
 import '../../widgets/encabezado_marca.dart';
 import '../gastos/gasto_form_screen.dart';
 import '../gastos/gastos_lista_screen.dart';
+import '../perfil/perfil_screen.dart';
+import '../usuarios/usuarios_lista_screen.dart';
 
 /// Menú principal (equivale a MenuActivity del Corte 3; une Screen4 y Screen5 de Kodular):
 /// todos ven la sección de gastos y solo el ADMIN ve la sección de administración.
@@ -139,7 +141,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             _BotonMenu(
                               texto: 'Usuarios',
                               icono: Icons.group_outlined,
-                              alTocar: () => _proximamente('Usuarios', 4),
+                              alTocar: () => _abrir(const UsuariosListaScreen()),
                             ),
                             _BotonMenu(
                               texto: 'Reportes de usuarios',
@@ -151,7 +153,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           _BotonMenu(
                             texto: 'Mi perfil',
                             icono: Icons.person_outline,
-                            alTocar: () => _proximamente('Mi perfil', 4),
+                            alTocar: () => _abrir(const PerfilScreen()),
                           ),
                           _BotonMenu(
                             texto: 'Cerrar sesión',
