@@ -78,6 +78,15 @@ class UsuarioService {
   /// DELETE /api/users/{id}
   Future<void> eliminar(String id) => _api.delete('api/users/$id');
 
+  /// GET /api/users/reports — los dos reportes parametrizados de Usuario:
+  /// por rol (ADMIN, REVIEWER o MEMBER) o por nombre (coincidencia parcial).
+  /// El filtro que va en null no se envía.
+  Future<List<Usuario>> reporte({String? rol, String? nombre}) async {
+    final json = await _api.get('api/users/reports', query: {'role': rol, 'name': nombre})
+        as List<dynamic>;
+    return json.map((u) => Usuario.fromJson(u as Map<String, dynamic>)).toList();
+  }
+
   /// Arma el JSON que se envía. Los campos vacíos no se incluyen,
   /// igual que Gson omitía los null en el Corte 3: así la contraseña no se cambia
   /// si se deja vacía. Es pública para poder probarla.

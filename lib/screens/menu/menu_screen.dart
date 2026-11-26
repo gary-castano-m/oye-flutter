@@ -11,6 +11,8 @@ import '../../widgets/encabezado_marca.dart';
 import '../gastos/gasto_form_screen.dart';
 import '../gastos/gastos_lista_screen.dart';
 import '../perfil/perfil_screen.dart';
+import '../reportes/reporte_gastos_screen.dart';
+import '../reportes/reporte_usuarios_screen.dart';
 import '../usuarios/usuarios_lista_screen.dart';
 
 /// Menú principal (equivale a MenuActivity del Corte 3; une Screen4 y Screen5 de Kodular):
@@ -49,13 +51,6 @@ class _MenuScreenState extends State<MenuScreen> {
   Future<void> _abrir(Widget pantalla) async {
     await Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => pantalla));
     await _cargarUsuario();
-  }
-
-  /// Aviso temporal para las opciones que se construyen en las fases siguientes.
-  void _proximamente(String opcion, int fase) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('"$opcion" llega en la Fase $fase.')));
   }
 
   Future<void> _confirmarCierreDeSesion() async {
@@ -133,7 +128,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           _BotonMenu(
                             texto: 'Reportes de gastos',
                             icono: Icons.bar_chart,
-                            alTocar: () => _proximamente('Reportes de gastos', 5),
+                            alTocar: () => _abrir(const ReporteGastosScreen()),
                           ),
                           // Solo el ADMIN ve esta sección.
                           if (usuario.esAdmin) ...[
@@ -146,7 +141,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             _BotonMenu(
                               texto: 'Reportes de usuarios',
                               icono: Icons.assessment_outlined,
-                              alTocar: () => _proximamente('Reportes de usuarios', 5),
+                              alTocar: () => _abrir(const ReporteUsuariosScreen()),
                             ),
                           ],
                           const _TituloSeccion('Mi cuenta'),

@@ -5,7 +5,7 @@ import '../../services/api_exception.dart';
 import '../../services/session_service.dart';
 import '../../services/usuario_service.dart';
 import '../../theme/app_colors.dart';
-import '../../utils/etiquetas.dart';
+import '../../widgets/fila_usuario.dart';
 import 'usuario_form_screen.dart';
 
 /// CRUD de la tabla Usuario, solo ADMIN (equivale a UsuariosActivity del Corte 3
@@ -170,7 +170,7 @@ class _UsuariosListaScreenState extends State<UsuariosListaScreen> {
               child: ListView.builder(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 88),
                 itemCount: _usuarios.length,
-                itemBuilder: (_, i) => _FilaUsuario(
+                itemBuilder: (_, i) => FilaUsuario(
                   usuario: _usuarios[i],
                   esYo: _usuarios[i].id == _miId,
                   alTocar: () => _mostrarOpciones(_usuarios[i]),
@@ -179,41 +179,6 @@ class _UsuariosListaScreenState extends State<UsuariosListaScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Una fila de la lista (equivale a item_usuario.xml + UsuarioAdapter del Corte 3).
-class _FilaUsuario extends StatelessWidget {
-  const _FilaUsuario({required this.usuario, required this.esYo, required this.alTocar});
-
-  final Usuario usuario;
-  final bool esYo;
-  final VoidCallback alTocar;
-
-  @override
-  Widget build(BuildContext context) {
-    final activo = usuario.status == 'ACTIVE';
-    return Card(
-      child: ListTile(
-        onTap: alTocar,
-        leading: CircleAvatar(
-          backgroundColor: usuario.esAdmin ? AppColors.ambar : AppColors.azulClaro,
-          foregroundColor: AppColors.azul,
-          child: Text(usuario.name.isEmpty ? '?' : usuario.name[0].toUpperCase()),
-        ),
-        title: Text(
-          esYo ? '${usuario.name} (tú)' : usuario.name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text('@${usuario.username} · ${usuario.email}\n'
-            '${Etiquetas.rol(usuario.role)} · ${Etiquetas.estado(usuario.status)}'),
-        isThreeLine: true,
-        trailing: Icon(
-          activo ? Icons.check_circle : Icons.block,
-          color: activo ? AppColors.verde : Colors.grey,
-        ),
       ),
     );
   }
