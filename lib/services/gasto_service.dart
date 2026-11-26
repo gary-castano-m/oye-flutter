@@ -1,4 +1,5 @@
 import '../models/gasto.dart';
+import '../models/reporte_gastos.dart';
 import 'api_client.dart';
 
 /// CRUD de la tabla Gastos (equivale al GastoRepository del Corte 3).
@@ -44,6 +45,17 @@ class GastoService {
 
   /// DELETE /api/gastos/{id}
   Future<void> eliminar(String id) => _api.delete('api/gastos/$id');
+
+  /// GET /api/gastos/reports — los dos reportes parametrizados de Gastos:
+  /// por rango de fechas (desde y hasta) o por lugar.
+  /// Los filtros en null no se envían. Filtrar, contar y sumar lo hace PostgreSQL en el servidor.
+  Future<ReporteGastos> reporte({String? desde, String? hasta, String? lugar}) async {
+    final json = await _api.get(
+      'api/gastos/reports',
+      query: {'desde': desde, 'hasta': hasta, 'lugar': lugar},
+    );
+    return ReporteGastos.fromJson(json as Map<String, dynamic>);
+  }
 
   /// Mismos campos que GastoRequest del Corte 3.
   Map<String, dynamic> _cuerpo(String fecha, double valor, String lugar, String descripcion) => {
