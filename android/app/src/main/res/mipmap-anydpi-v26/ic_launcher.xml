@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono adaptativo (Android 8 en adelante): cada celular lo recorta con su forma
+     (círculo, cuadro redondeado, gota...). Fondo con degradado y burbuja Oye! encima. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
