@@ -18,6 +18,13 @@ class OyeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // quita la cinta "DEBUG"
       theme: AppTheme.claro(),
       themeMode: ThemeMode.light, // tema claro siempre, como en el Corte 3
+
+      // Español de Colombia para los componentes del sistema:
+      // calendario, botones "Aceptar/Cancelar", "Pegar", formatos de fecha, etc.
+      locale: const Locale('es', 'CO'),
+      supportedLocales: const [Locale('es', 'CO'), Locale('es')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+
       home: const SplashScreen(),
     );
   }

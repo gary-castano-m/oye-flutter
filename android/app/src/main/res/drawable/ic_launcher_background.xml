@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del ícono adaptativo (versión Flutter, opción D):
+     degradado diagonal de azul #003A52 (arriba a la izquierda) a verde #22A855 (abajo a la derecha). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:startColor="#003A52"
+        android:endColor="#22A855"
+        android:type="linear" />
+</shape>
